@@ -1,5 +1,10 @@
 import { injectable, inject } from "inversify";
-import { elizaLogger, Service, type ServiceType, type IAgentRuntime } from "@elizaos/core";
+import {
+    elizaLogger,
+    Service,
+    type ServiceType,
+    type IAgentRuntime,
+} from "@elizaos/core";
 import type { FlowAccountBalanceInfo } from "@elizaos/plugin-flow";
 import { globalContainer } from "@elizaos/plugin-di";
 import {
@@ -25,7 +30,7 @@ declare module "@elizaos/core" {
 export class AccountsPoolService extends Service {
     constructor(
         @inject(FlowWalletService)
-        private readonly walletService: FlowWalletService,
+        private readonly walletService: FlowWalletService
     ) {
         super();
     }
@@ -41,17 +46,26 @@ export class AccountsPoolService extends Service {
             // Register the main account
             await new Promise<void>((resolve, reject) => {
                 this.walletService
-                    .sendTransaction(transactions.initAgentAccount, (_arg, _t) => [], {
-                        onFinalized: async (txid, _status, errorMsg) => {
-                            if (errorMsg) {
-                                elizaLogger.error(`Failed to initialize main account: ${errorMsg}`);
-                                reject(new Error(errorMsg));
-                            } else {
-                                elizaLogger.info("Main account initialized by txid:", txid);
-                                resolve();
-                            }
-                        },
-                    })
+                    .sendTransaction(
+                        transactions.initAgentAccount,
+                        (_arg, _t) => [],
+                        {
+                            onFinalized: async (txid, _status, errorMsg) => {
+                                if (errorMsg) {
+                                    elizaLogger.error(
+                                        `Failed to initialize main account: ${errorMsg}`
+                                    );
+                                    reject(new Error(errorMsg));
+                                } else {
+                                    elizaLogger.info(
+                                        "Main account initialized by txid:",
+                                        txid
+                                    );
+                                    resolve();
+                                }
+                            },
+                        }
+                    )
                     .catch(reject);
             });
         }
@@ -75,7 +89,7 @@ export class AccountsPoolService extends Service {
             const obj = await this.walletService.executeScript(
                 scripts.getAccountStatus,
                 (arg, t) => [arg(walletAddress, t.Address)],
-                undefined,
+                undefined
             );
             if (obj) {
                 return {
@@ -85,7 +99,10 @@ export class AccountsPoolService extends Service {
                 };
             }
         } catch (error) {
-            elizaLogger.error(`Failed to query account status from ${walletAddress}`, error);
+            elizaLogger.error(
+                `Failed to query account status from ${walletAddress}`,
+                error
+            );
             throw error;
         }
         return undefined;
@@ -100,11 +117,17 @@ export class AccountsPoolService extends Service {
         try {
             return await this.walletService.executeScript(
                 scripts.isAddressChildOf,
-                (arg, t) => [arg(walletAddress, t.Address), arg(address, t.Address)],
-                false,
+                (arg, t) => [
+                    arg(walletAddress, t.Address),
+                    arg(address, t.Address),
+                ],
+                false
             );
         } catch (error) {
-            elizaLogger.error(`Failed to check if address ${address} is child of agent`, error);
+            elizaLogger.error(
+                `Failed to check if address ${address} is child of agent`,
+                error
+            );
         }
         return false;
     }
@@ -115,7 +138,7 @@ export class AccountsPoolService extends Service {
      * @returns
      */
     async queryAccountInfo(
-        userId: string = undefined,
+        userId: string = undefined
     ): Promise<FlowAccountBalanceInfo | undefined> {
         const walletAddress = this.walletService.address;
         try {
@@ -125,20 +148,24 @@ export class AccountsPoolService extends Service {
                     arg(walletAddress, t.Address),
                     arg(userId ?? null, t.Optional(t.String)),
                 ],
-                undefined,
+                undefined
             );
             if (obj) {
                 return {
                     address: obj.address,
                     balance: Number.parseFloat(obj.balance),
                     coaAddress: obj.coaAddress,
-                    coaBalance: obj.coaBalance ? Number.parseFloat(obj.coaBalance) : 0,
+                    coaBalance: obj.coaBalance
+                        ? Number.parseFloat(obj.coaBalance)
+                        : 0,
                 };
             }
         } catch (error) {
             elizaLogger.error(
-                `Failed to query account info for ${userId ?? "root"} from ${walletAddress}`,
-                error,
+                `Failed to query account info for ${
+                    userId ?? "root"
+                } from ${walletAddress}`,
+                error
             );
             throw error;
         }
@@ -153,15 +180,18 @@ export class AccountsPoolService extends Service {
     async createNewAccount(
         userId: string,
         callbacks?: TransactionCallbacks,
-        initalFunding?: number,
+        initalFunding?: number
     ): Promise<TransactionSentResponse> {
         return await this.walletService.sendTransaction(
             transactions.acctPoolCreateChildAccount,
             (arg, t) => [
                 arg(userId, t.String),
-                arg(initalFunding ? initalFunding.toFixed(8) : null, t.Optional(t.UFix64)),
+                arg(
+                    initalFunding ? initalFunding.toFixed(8) : null,
+                    t.Optional(t.UFix64)
+                ),
             ],
-            callbacks,
+            callbacks
         );
     }
 }
