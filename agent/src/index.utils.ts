@@ -16,7 +16,6 @@ import { AlexaClientInterface } from "@elizaos/client-alexa";
 
 import { FarcasterClientInterface } from "@elizaos/client-farcaster";
 import { JeeterClientInterface } from "@elizaos/client-simsai";
-import { XmtpClientInterface } from "@elizaos/client-xmtp";
 import { DirectClient } from "@elizaos/client-direct";
 
 import {
@@ -702,11 +701,6 @@ export async function initializeClients(
     if (clientTypes.includes(Clients.AUTO)) {
         const autoClient = await AutoClientInterface.start(runtime);
         if (autoClient) clients.auto = autoClient;
-    }
-
-    if (clientTypes.includes(Clients.XMTP)) {
-        const xmtpClient = await XmtpClientInterface.start(runtime);
-        if (xmtpClient) clients.xmtp = xmtpClient;
     }
 
     if (clientTypes.includes(Clients.DISCORD)) {
