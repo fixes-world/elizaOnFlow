@@ -181,7 +181,7 @@ eliza.manifest.sgx
 eliza.sig
 
 characters/**/secrets.json
-characters/*.character.json
+charactors/*.character.json
 
 lit-config.json
 
