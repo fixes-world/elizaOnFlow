@@ -9,6 +9,7 @@ create-eliza-app
 @elizaos/plugin-avalanche
 @elizaos/plugin-b2
 @elizaos/plugin-bnb
+@elizaos/plugin-btcfun
 @elizaos/plugin-coinbase
 @elizaos/plugin-conflux
 @elizaos/plugin-cronos
@@ -42,6 +43,3 @@ create-eliza-app
 @elizaos/plugin-lit
 @elizaos/plugin-mind-network
 @elizaos/plugin-mina
-@elizaos/plugin-trikon
-@elizaos/plugin-zilliqa
-@elizaos/plugin-arbitrage
