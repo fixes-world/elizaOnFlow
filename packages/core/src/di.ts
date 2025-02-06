@@ -29,8 +29,7 @@ globalContainer
         let jsonObjcet: Record<string, unknown> | null = null;
         for (const tryPath of pathsToTry) {
             try {
-                jsonObjcet = (await import(tryPath, { with: { type: "json" } }))
-                    .default;
+                jsonObjcet = await import(tryPath, { with: { type: "json" } });
                 if (jsonObjcet) {
                     elizaLogger.info(
                         `Successfully loaded 'flow.json' from: ${tryPath}`,

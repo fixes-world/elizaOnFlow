@@ -53,22 +53,23 @@ export class AccountsPoolService extends Service {
                             onFinalized: async (txid, _status, errorMsg) => {
                                 if (errorMsg) {
                                     elizaLogger.error(
-                                        `Failed to initialize main account: ${errorMsg}`
+                                        `Failed to initialize main account: ${errorMsg}`,
                                     );
                                     reject(new Error(errorMsg));
                                 } else {
                                     elizaLogger.info(
                                         "Main account initialized by txid:",
-                                        txid
+                                        txid,
                                     );
                                     resolve();
                                 }
                             },
-                        }
+                        },
                     )
                     .catch(reject);
             });
         }
+        elizaLogger.info("AccountsPoolService initialized");
     }
 
     // ----- Customized methods -----
