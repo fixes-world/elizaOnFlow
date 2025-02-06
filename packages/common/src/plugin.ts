@@ -1,5 +1,5 @@
-import { type PluginOptions } from "@elizaos/plugin-di";
-import { TransferAction, GetPriceAction, GetTokenInfoAction } from "./actions";
+import { type PluginOptions } from "@fixes-ai/core";
+import { TransferAction, GetPriceAction } from "./actions";
 
 /**
  * Basic Flow Plugin Options
@@ -8,7 +8,7 @@ import { TransferAction, GetPriceAction, GetTokenInfoAction } from "./actions";
 export const basicFlowPluginOptions: PluginOptions = {
     name: "flow-basic",
     description: "Flow Plugin for Eliza, with basic actions like transfer",
-    actions: [TransferAction, GetPriceAction, GetTokenInfoAction],
+    actions: [TransferAction, GetPriceAction],
     providers: [],
     evaluators: [],
     services: [],

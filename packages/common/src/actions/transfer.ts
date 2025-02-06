@@ -14,8 +14,12 @@ import {
     transactions,
     TransactionResponse,
 } from "@elizaos/plugin-flow";
-import { ActionOptions, globalContainer, property } from "@elizaos/plugin-di";
-import { BaseFlowInjectableAction } from "@fixes-ai/core";
+import {
+    ActionOptions,
+    BaseInjactableAction,
+    globalContainer,
+    property,
+} from "@fixes-ai/core";
 
 /**
  * The generated content for the transfer action
@@ -135,7 +139,7 @@ const transferOption: ActionOptions<TransferContent> = {
  * @description Transfer funds from one account to another
  */
 @injectable()
-export class TransferAction extends BaseFlowInjectableAction<TransferContent> {
+export class TransferAction extends BaseInjactableAction<TransferContent> {
     constructor() {
         super(transferOption);
     }

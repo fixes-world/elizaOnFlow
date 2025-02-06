@@ -7,10 +7,12 @@ import {
     Memory,
     State,
 } from "@elizaos/core";
-import { ActionOptions, globalContainer, property } from "@elizaos/plugin-di";
 import {
-    BaseFlowInjectableAction,
+    ActionOptions,
+    BaseInjactableAction,
     CacheProvider,
+    globalContainer,
+    property,
     ScriptQueryResponse,
 } from "@fixes-ai/core";
 import { scripts } from "../assets/scripts.defs";
@@ -103,7 +105,7 @@ const actionOpts: ActionOptions<GetTokenInfoContent> = {
  * @description Get the current price of FLOW token or stFLOW token
  */
 @injectable()
-export class GetTokenInfoAction extends BaseFlowInjectableAction<GetTokenInfoContent> {
+export class GetTokenInfoAction extends BaseInjactableAction<GetTokenInfoContent> {
     constructor(
         @inject(CacheProvider)
         private readonly cache: CacheProvider

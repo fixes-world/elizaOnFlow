@@ -16,7 +16,7 @@ import { ConnectorProvider, WalletProvider } from "./providers";
  * Base abstract class for injectable actions
  */
 @injectable()
-export abstract class BaseFlowInjectableAction<
+export abstract class BaseFlowInjactableAction<
     T,
 > extends BaseInjectableAction<T> {
     // -------- Injects --------
