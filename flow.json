@@ -1,11 +1,6 @@
 {
     "contracts": {
-        "AccountsPool": {
-            "source": "cadence/contracts/AccountsPool.cdc",
-            "aliases": {
-                "testnet": "9f9cd022231f7a19"
-            }
-        }
+        "AccountsPool": "cadence/contracts/AccountsPool.cdc"
     },
     "dependencies": {
         "AddressUtils": {
