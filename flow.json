@@ -1,6 +1,9 @@
 {
     "contracts": {
-        "AccountsPool": "cadence/contracts/AccountsPool.cdc"
+        "AccountsPool": {
+            "source": "cadence/contracts/AccountsPool.cdc",
+            "aliases": {}
+        }
     },
     "dependencies": {
         "AddressUtils": {
@@ -409,13 +412,6 @@
             "key": {
                 "type": "file",
                 "location": "./emulator.key"
-            }
-        },
-        "pool-testnet-deploy": {
-            "address": "9f9cd022231f7a19",
-            "key": {
-                "type": "file",
-                "location": "pool-testnet-deploy.pkey"
             }
         }
     },
