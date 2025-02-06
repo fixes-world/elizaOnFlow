@@ -13,7 +13,6 @@ import { FlowWalletService, type ScriptQueryResponse } from "@fixes-ai/core";
 
 import { formatWalletInfo } from "../formater";
 import { AccountsPoolService } from "../services/acctPool.service";
-import { FlowAccountBalanceInfo } from "@elizaos/plugin-flow";
 
 /**
  * Get User Account Info Action
@@ -103,19 +102,12 @@ export class GetUserAccountInfoAction implements Action {
 
         const accountName = `Account[${mainAddr}/${isSelf ? "root" : userId}]`;
 
-        let acctInfo: FlowAccountBalanceInfo;
-        try {
-            acctInfo = await this.acctPoolService.queryAccountInfo(
-                isSelf ? undefined : userId,
-            );
-        } catch (error) {
-            resp.error = `Error: ${error.message}`;
-        }
+        const acctInfo = await this.acctPoolService.queryAccountInfo(
+            isSelf ? undefined : userId,
+        );
 
         if (!acctInfo) {
-            resp.error =
-                resp.error ??
-                `Failed to query account info for ${userId} from ${mainAddr}`;
+            resp.error = `Failed to query account info for ${userId} from ${mainAddr}`;
             callback?.({
                 text: resp.error,
                 content: {

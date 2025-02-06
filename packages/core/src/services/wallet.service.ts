@@ -11,7 +11,6 @@ import * as fcl from "@onflow/fcl";
 import type {
     ArgumentFunction,
     TransactionCallbacks,
-    TransactionSentResponse,
     TransactionTrackingPayload,
 } from "../types";
 import { WalletProvider, ConnectorProvider } from "../providers";
@@ -134,7 +133,7 @@ export class FlowWalletService extends Service {
         code: string,
         argsFunc: ArgumentFunction,
         callbacks?: TransactionCallbacks,
-    ): Promise<TransactionSentResponse> {
+    ): Promise<{ txId: string; index: number }> {
         const index = await this.acquireAndLockIndex();
         if (index < 0) {
             throw new Error(
