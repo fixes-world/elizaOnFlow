@@ -8,7 +8,10 @@ import {
     type Memory,
     type State,
 } from "@elizaos/core";
-import { validateFlowConfig } from "@elizaos/plugin-flow";
+import {
+    type TransactionResponse,
+    validateFlowConfig,
+} from "@elizaos/plugin-flow";
 import { type ActionOptions, BaseInjectableAction } from "@elizaos/plugin-di";
 import { FlowWalletService } from "./services";
 import { WalletProvider } from "./providers";
@@ -48,7 +51,7 @@ export abstract class BaseFlowInjectableAction<
         message: Memory,
         state?: State,
         callback?: HandlerCallback,
-    ): Promise<any | null>;
+    ): Promise<TransactionResponse | ScriptQueryResponse | null>;
 
     // -------- Implemented methods for Eliza runtime --------
 

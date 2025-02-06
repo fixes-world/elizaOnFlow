@@ -11,9 +11,7 @@ import {
 import { FlowAccountBalanceInfo } from "@elizaos/plugin-flow";
 import { globalContainer } from "@elizaos/plugin-di";
 import { FlowWalletService, type ScriptQueryResponse } from "@fixes-ai/core";
-
 import { scripts } from "../assets/scripts.defs";
-import { formatWalletInfo } from "../formater";
 
 /**
  * Get User Account Info Action
@@ -22,7 +20,7 @@ import { formatWalletInfo } from "../formater";
  * @description Get the current account information of the user
  */
 @injectable()
-export class GetUserAccountInfoAction implements Action {
+export class GetUserAccountInfo implements Action {
     public readonly name: string;
     public readonly similes: string[];
     public readonly description: string;
@@ -123,7 +121,7 @@ export class GetUserAccountInfoAction implements Action {
 
         if (resp.ok) {
             callback?.({
-                text: formatWalletInfo(accountName, acctInfo),
+                text: format(accountName, acctInfo),
                 content: { success: true, info: acctInfo },
                 source: "FlowBlockchain",
             });
@@ -144,5 +142,20 @@ export class GetUserAccountInfoAction implements Action {
     }
 }
 
+/**
+ * Format the price data
+ *
+ * @param acctInfo
+ * @returns the formatted price string
+ */
+const format = (accountName: string, info: FlowAccountBalanceInfo): string => {
+    let output = `Here is your wallet status:\n`;
+    output += `Flow wallet address: ${info.address}\n`;
+    output += `FLOW balance: ${info.balance} FLOW\n`;
+    output += `Flow wallet's COA(EVM) address: ${info.coaAddress || "unknown"}\n`;
+    output += `FLOW balance in COA(EVM) address: ${info.coaBalance ?? 0} FLOW`;
+    return output;
+};
+
 // Register the transfer action
-globalContainer.bind(GetUserAccountInfoAction).toSelf();
+globalContainer.bind(GetUserAccountInfo).toSelf();

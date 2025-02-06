@@ -72,13 +72,6 @@ export class FlowWalletService extends Service {
     }
 
     /**
-     * Whether the service is initialized or not.
-     */
-    get isInitialized() {
-        return FlowWalletService.isInitialized;
-    }
-
-    /**
      * Get the Flow connector
      */
     get connector() {

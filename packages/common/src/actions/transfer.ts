@@ -12,6 +12,7 @@ import {
     isEVMAddress,
     queries as defaultQueries,
     transactions,
+    type TransactionResponse,
 } from "@elizaos/plugin-flow";
 import {
     type ActionOptions,
@@ -19,7 +20,6 @@ import {
     property,
 } from "@elizaos/plugin-di";
 import { BaseFlowInjectableAction } from "@fixes-ai/core";
-import { formatTransationSent } from "../formater";
 
 /**
  * The generated content for the transfer action
@@ -49,7 +49,7 @@ export class TransferContent {
         examples: [
             "For Cadence address: '0x1654653399040a61'",
             "For EVM address: '0x742d35Cc6634C0532925a3b844Bc454e4438f44e'",
-            "For userId: 'e1b3b9c2-7e3f-4b1b-9f7d-2a0c7e2d6e9c', If the recipient mentioned in message is 'me' or 'myself', it should be the current userId variable",
+            "For userId: 'e1b3b9c2-7e3f-4b1b-9f7d-2a0c7e2d6e9c'",
         ],
         schema: z.string(),
     })
@@ -156,7 +156,7 @@ export class TransferAction extends BaseFlowInjectableAction<TransferContent> {
         _message: Memory,
         _state?: State,
         callback?: HandlerCallback,
-    ) {
+    ): Promise<TransactionResponse | null> {
         if (!content) {
             elizaLogger.warn("No content generated");
             return;
@@ -187,12 +187,14 @@ export class TransferAction extends BaseFlowInjectableAction<TransferContent> {
         // Check if the amount is valid
         if (totalBalance < amount) {
             elizaLogger.error("Insufficient balance to transfer.");
-            callback?.({
-                text: `${logPrefix} Unable to process transfer request. Insufficient balance.`,
-                content: {
-                    error: "Insufficient balance",
-                },
-            });
+            if (callback) {
+                callback({
+                    text: `${logPrefix} Unable to process transfer request. Insufficient balance.`,
+                    content: {
+                        error: "Insufficient balance",
+                    },
+                });
+            }
             throw new Error("Insufficient balance to transfer");
         }
 
@@ -266,13 +268,13 @@ export class TransferAction extends BaseFlowInjectableAction<TransferContent> {
             // call the callback with the transaction response
             if (callback) {
                 const tokenName = content.token || "FLOW";
-                const extraMsg = `${logPrefix} Successfully transferred ${content.amount} ${tokenName} to ${content.to}`;
-                callback?.({
-                    text: formatTransationSent(
-                        txId,
-                        this.walletSerivce.wallet.network,
-                        extraMsg,
-                    ),
+                const baseUrl =
+                    this.walletSerivce.wallet.network === "testnet"
+                        ? "https://testnet.flowscan.io"
+                        : "https://flowscan.io";
+                const txURL = `${baseUrl}/tx/${txId}/events`;
+                callback({
+                    text: `${logPrefix} Successfully transferred ${content.amount} ${tokenName} to ${content.to}\nTransaction: [${txId}](${txURL})`,
                     content: {
                         success: true,
                         txid: txId,
@@ -284,12 +286,15 @@ export class TransferAction extends BaseFlowInjectableAction<TransferContent> {
             }
         } catch (e: any) {
             elizaLogger.error("Error in sending transaction:", e.message);
-            callback?.({
-                text: `${logPrefix} Unable to process transfer request. Error in sending transaction.`,
-                content: {
-                    error: e.message,
-                },
-            });
+            if (callback) {
+                callback({
+                    text: `${logPrefix} Unable to process transfer request. Error in sending transaction.`,
+                    content: {
+                        error: e.message,
+                    },
+                });
+            }
+            throw e;
         }
 
         elizaLogger.log("Completed Flow Plugin's SEND_COIN handler.");
