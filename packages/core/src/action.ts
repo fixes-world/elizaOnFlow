@@ -8,7 +8,7 @@ import {
     type Memory,
     type State,
 } from "@elizaos/core";
-import { type TransactionResponse, validateFlowConfig } from "@elizaos/plugin-flow";
+import { validateFlowConfig } from "@elizaos/plugin-flow";
 import { type ActionOptions, BaseInjectableAction } from "@elizaos/plugin-di";
 import { FlowWalletService } from "./services";
 import { WalletProvider } from "./providers";
@@ -17,7 +17,9 @@ import { WalletProvider } from "./providers";
  * Base abstract class for injectable actions
  */
 @injectable()
-export abstract class BaseFlowInjectableAction<T> extends BaseInjectableAction<T> {
+export abstract class BaseFlowInjectableAction<
+    T
+> extends BaseInjectableAction<T> {
     // -------- Injects --------
 
     @inject(WalletProvider)
@@ -45,8 +47,8 @@ export abstract class BaseFlowInjectableAction<T> extends BaseInjectableAction<T
         runtime: IAgentRuntime,
         message: Memory,
         state?: State,
-        callback?: HandlerCallback,
-    ): Promise<unknown | null>;
+        callback?: HandlerCallback
+    ): Promise<any | null>;
 
     // -------- Implemented methods for Eliza runtime --------
 
@@ -59,7 +61,11 @@ export abstract class BaseFlowInjectableAction<T> extends BaseInjectableAction<T
      * @param state The state object from Eliza framework
      * @returns The validation result
      */
-    async validate(runtime: IAgentRuntime, _message: Memory, _state?: State): Promise<boolean> {
+    async validate(
+        runtime: IAgentRuntime,
+        _message: Memory,
+        _state?: State
+    ): Promise<boolean> {
         // Validate the Flow environment configuration
         await validateFlowConfig(runtime);
 
@@ -80,14 +86,13 @@ export abstract class BaseFlowInjectableAction<T> extends BaseInjectableAction<T
     protected async prepareActionContext(
         runtime: IAgentRuntime,
         message: Memory,
-        state: State,
+        state: State
     ): Promise<string> {
         // Initialize or update state
-        let currentState: State;
         if (!state) {
-            currentState = (await runtime.composeState(message)) as State;
+            state = (await runtime.composeState(message)) as State;
         } else {
-            currentState = await runtime.updateRecentMessageState(state);
+            state = await runtime.updateRecentMessageState(state);
         }
 
         // Get wallet info for context, no state update
@@ -95,7 +100,7 @@ export abstract class BaseFlowInjectableAction<T> extends BaseInjectableAction<T
         state.walletInfo = walletInfo;
 
         // Compose context
-        return composeContext({ state: currentState, template: this.template });
+        return composeContext({ state, template: this.template });
     }
 
     /**
@@ -113,32 +118,42 @@ export abstract class BaseFlowInjectableAction<T> extends BaseInjectableAction<T
         message: Memory,
         state?: State,
         options?: Record<string, unknown>,
-        callback?: HandlerCallback,
-    ) {
-        const res = await super.handler(runtime, message, state, options, callback);
+        callback?: HandlerCallback
+    ): Promise<any | null> {
+        const res = await super.handler(
+            runtime,
+            message,
+            state,
+            options,
+            callback
+        );
         if (res) {
             if (isScriptQueryResponse(res)) {
                 if (res.ok) {
                     elizaLogger.log(
-                        "Action executed with script query successfully with data: ",
-                        JSON.stringify(res.data),
+                        `Action executed with script query successfully with data: `,
+                        JSON.stringify(res.data)
                     );
                 } else {
                     elizaLogger.error(
-                        "Action executed with script query failed: ",
-                        res.errorMessage ?? res.error ?? "Unknown error",
+                        `Action executed with script query failed: `,
+                        res.errorMessage ?? res.error ?? "Unknown error"
                     );
                 }
             } else {
-                const { signer, txid } = res as TransactionResponse;
                 elizaLogger.log(
-                    `Action executed with transaction: ${signer.address}[${signer.keyIndex}] - ${txid}`,
+                    `Action executed with transaction: ${res.signer.address}[${res.signer.keyIndex}] - ${res.txid}`
                 );
             }
         }
     }
 }
 
-function isScriptQueryResponse(res: unknown): res is ScriptQueryResponse {
-    return res && typeof res === "object" && "ok" in res && typeof res.ok === "boolean";
+function isScriptQueryResponse(res: any): res is ScriptQueryResponse {
+    return (
+        res &&
+        typeof res === "object" &&
+        "ok" in res &&
+        typeof res.ok === "boolean"
+    );
 }

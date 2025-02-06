@@ -22,9 +22,6 @@
     "[javascriptreact]": {
         "editor.defaultFormatter": "biomejs.biome"
     },
-    "[json]": {
-        "editor.defaultFormatter": "vscode.json-language-features"
-    },
     "[jsonc]": {
         "editor.defaultFormatter": "vscode.json-language-features"
     },

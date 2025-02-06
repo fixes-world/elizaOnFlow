@@ -6,8 +6,8 @@ import type { TransactionStatus } from "@onflow/typedefs";
 
 export interface ScriptQueryResponse {
     ok: boolean;
-    data?: unknown;
-    error?: Record<string, unknown>;
+    data?: any;
+    error?: any;
     errorMessage?: string;
 }
 
@@ -15,8 +15,8 @@ export type ArgumentFunction = (
     argFunc: typeof arg,
     t: typeof ftypes,
 ) => Array<{
-    value: unknown;
-    xform: unknown;
+    value: any;
+    xform: any;
 }>;
 
 export type TransactionStatusCallback = (
