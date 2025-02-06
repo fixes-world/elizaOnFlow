@@ -2,17 +2,13 @@ import { z } from "zod";
 import { injectable } from "inversify";
 import {
     elizaLogger,
-    type HandlerCallback,
-    type IAgentRuntime,
-    type Memory,
-    type State,
+    HandlerCallback,
+    IAgentRuntime,
+    Memory,
+    State,
 } from "@elizaos/core";
-import {
-    type ActionOptions,
-    globalContainer,
-    property,
-} from "@elizaos/plugin-di";
-import { BaseFlowInjectableAction, type ScriptQueryResponse } from "@fixes-ai/core";
+import { ActionOptions, globalContainer, property } from "@elizaos/plugin-di";
+import { BaseFlowInjectableAction, ScriptQueryResponse } from "@fixes-ai/core";
 import { scripts } from "../assets/scripts.defs";
 
 /**
@@ -139,7 +135,7 @@ export class GetPriceAction extends BaseFlowInjectableAction<GetPriceContent> {
             }
             if (data) {
                 resp.ok = true;
-                resp.data = Number.parseFloat(data);
+                resp.data = parseFloat(data);
             } else {
                 resp.error = resp.error ?? "Failed to get price data";
             }

@@ -3,16 +3,13 @@ import type { ScriptQueryResponse } from "./types";
 import {
     composeContext,
     elizaLogger,
-    type HandlerCallback,
-    type IAgentRuntime,
-    type Memory,
-    type State,
+    HandlerCallback,
+    IAgentRuntime,
+    Memory,
+    State,
 } from "@elizaos/core";
-import {
-    type TransactionResponse,
-    validateFlowConfig,
-} from "@elizaos/plugin-flow";
-import { type ActionOptions, BaseInjectableAction } from "@elizaos/plugin-di";
+import { TransactionResponse, validateFlowConfig } from "@elizaos/plugin-flow";
+import { ActionOptions, BaseInjectableAction } from "@elizaos/plugin-di";
 import { ConnectorProvider, WalletProvider } from "./providers";
 
 /**

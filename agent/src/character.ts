@@ -1,5 +1,5 @@
 import {
-    type Character,
+    Character,
     ModelProviderName,
     defaultCharacter as DefaultElizaCharacter,
 } from "@elizaos/core";

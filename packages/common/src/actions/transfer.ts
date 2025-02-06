@@ -2,23 +2,19 @@ import { z } from "zod";
 import { injectable } from "inversify";
 import {
     elizaLogger,
-    type HandlerCallback,
-    type IAgentRuntime,
-    type Memory,
-    type State,
+    HandlerCallback,
+    IAgentRuntime,
+    Memory,
+    State,
 } from "@elizaos/core";
 import {
     isCadenceIdentifier,
     isEVMAddress,
     queries,
     transactions,
-    type TransactionResponse,
+    TransactionResponse,
 } from "@elizaos/plugin-flow";
-import {
-    type ActionOptions,
-    globalContainer,
-    property,
-} from "@elizaos/plugin-di";
+import { ActionOptions, globalContainer, property } from "@elizaos/plugin-di";
 import { BaseFlowInjectableAction } from "@fixes-ai/core";
 
 /**
@@ -202,7 +198,7 @@ export class TransferAction extends BaseFlowInjectableAction<TransferContent> {
         const amount =
             typeof content.amount === "number"
                 ? content.amount
-                : Number.parseFloat(content.amount);
+                : parseFloat(content.amount);
 
         // Check if the wallet has enough balance to transfer
         const accountInfo = await queries.queryAccountBalanceInfo(

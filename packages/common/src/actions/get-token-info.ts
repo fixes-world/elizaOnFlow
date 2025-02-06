@@ -2,23 +2,19 @@ import { z } from "zod";
 import { inject, injectable } from "inversify";
 import {
     elizaLogger,
-    type HandlerCallback,
-    type IAgentRuntime,
-    type Memory,
-    type State,
+    HandlerCallback,
+    IAgentRuntime,
+    Memory,
+    State,
 } from "@elizaos/core";
-import {
-    type ActionOptions,
-    globalContainer,
-    property,
-} from "@elizaos/plugin-di";
+import { ActionOptions, globalContainer, property } from "@elizaos/plugin-di";
 import {
     BaseFlowInjectableAction,
     CacheProvider,
-    type ScriptQueryResponse,
+    ScriptQueryResponse,
 } from "@fixes-ai/core";
 import { scripts } from "../assets/scripts.defs";
-import type { TokenDetailsFromTokenList, TokenInfo } from "../types";
+import { TokenDetailsFromTokenList, TokenInfo } from "../types";
 
 /**
  * The generated content for the transfer action
@@ -245,10 +241,10 @@ export class GetTokenInfoAction extends BaseFlowInjectableAction<GetTokenInfoCon
                             info.address === tokenDetails.flowAddress &&
                             info.contractName === tokenDetails.contractName
                         ) {
-                            tokenInfo.totalSupply = Number.parseFloat(
+                            tokenInfo.totalSupply = parseFloat(
                                 info.totalSupply
                             );
-                            tokenInfo.priceInFLOW = Number.parseFloat(
+                            tokenInfo.priceInFLOW = parseFloat(
                                 info.priceInFLOW
                             );
                             tokenInfo.mcapValueInFLOW =
@@ -276,14 +272,14 @@ export class GetTokenInfoAction extends BaseFlowInjectableAction<GetTokenInfoCon
                     ) {
                         tokenInfo.name = info.name;
                         tokenInfo.symbol = info.symbol;
-                        tokenInfo.decimals = Number.parseInt(info.decimals);
+                        tokenInfo.decimals = parseInt(info.decimals);
                         tokenInfo.totalSupply =
-                            Number.parseInt(info.totalSupply) /
+                            parseInt(info.totalSupply) /
                             Math.pow(10, tokenInfo.decimals);
-                        const reservedTokenInPair = Number.parseInt(
+                        const reservedTokenInPair = parseInt(
                             info.reservedTokenInPair
                         );
-                        const reservedFlowInPair = Number.parseInt(
+                        const reservedFlowInPair = parseInt(
                             info.reservedFlowInPair
                         );
                         tokenInfo.priceInFLOW =
