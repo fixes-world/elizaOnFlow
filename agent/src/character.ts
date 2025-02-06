@@ -3,11 +3,11 @@ import {
     ModelProviderName,
     defaultCharacter as DefaultElizaCharacter,
 } from "@elizaos/core";
-import { basicFlowPlugin } from "@fixes-ai/common";
+import { basicFlowPluginOptions } from "@fixes-ai/common";
 
 const localDefaultCharacter: Character = {
     modelProvider: ModelProviderName.DEEPSEEK,
-    plugins: [basicFlowPlugin],
+    plugins: [basicFlowPluginOptions],
 } as Character;
 
 export const defaultCharacter: Character = Object.assign(
