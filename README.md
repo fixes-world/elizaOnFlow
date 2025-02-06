@@ -92,25 +92,7 @@ pnpm start:client
 3. Connect with X (Twitter)
     - change `"clients": []` to `"clients": ["twitter"]` in the character file to connect with X
 
-#### Additional Requirements
-
-You may need to install Sharp. If you see an error when starting up, try installing it with the following command:
-
-```bash
-pnpm install --include=optional sharp
-```
-
-## 🌊 Flow Cadence
-
-### Core Cadence Contracts
-
-- [AccountsPool](./cadence/contracts/AccountsPool.cdc) - A contract to let the agent account manage multiple child accounts.
-
-| Contract | Testnet Address | Mainnet Address |
-| --- | --- | --- |
-| AccountsPool | [0x9f9cd022231f7a19](https://testnet.flowscan.io/account/0x9f9cd022231f7a19) | Not deployed yet |
-
-### Install / Add new Flow Cadence contracts dependencies
+#### Install / Add new Flow Cadence contracts dependencies
 
 All Flow Cadence contracts dependencies should be installed to `flow.json` file.
 To ensure development and deployment, you need to install all dependencies.
@@ -123,6 +105,14 @@ And if you want to add a new contract dependency, you can use the following comm
 
 ```bash
 flow deps add mainnet://0xAddress.ContractName
+```
+
+#### Additional Requirements
+
+You may need to install Sharp. If you see an error when starting up, try installing it with the following command:
+
+```bash
+pnpm install --include=optional sharp
 ```
 
 ### Community & contact
