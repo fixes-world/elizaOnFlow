@@ -112,7 +112,7 @@ export class FlowWalletService extends Service {
         code: string,
         argsFunc: ArgumentFunction,
         defaultValue: any,
-    ) {
+    ): Promise<string> {
         return await this._wallet.executeScript(code, argsFunc, defaultValue);
     }
 
@@ -126,7 +126,7 @@ export class FlowWalletService extends Service {
         code: string,
         argsFunc: ArgumentFunction,
         callbacks?: TransactionCallbacks,
-    ): Promise<{ txId: string; index: number }> {
+    ): Promise<string> {
         const index = await this.acquireAndLockIndex();
         if (index < 0) {
             throw new Error(
@@ -135,11 +135,13 @@ export class FlowWalletService extends Service {
         }
 
         // use availalbe index and default private key
+        const authz = this._wallet.buildAuthorization(index);
+
         try {
             const txId = await this._wallet.sendTransaction(
                 code,
                 argsFunc,
-                this._wallet.buildAuthorization(index),
+                authz,
             );
             if (txId) {
                 // Start transaction tracking
@@ -149,7 +151,7 @@ export class FlowWalletService extends Service {
                     callbacks,
                 );
             }
-            return { txId, index };
+            return txId;
         } catch (error) {
             // Acknowledge and unlock the account key index
             await this.ackAndUnlockIndex(index);
@@ -202,9 +204,6 @@ export class FlowWalletService extends Service {
                     unsub();
                     // remove the tracking payload
                     this.keysTrackingPayloads.delete(index);
-                    elizaLogger.info(
-                        `FlowWalletService: Transaction tracking task completed for txid: ${txid}`,
-                    );
                 }
             }
         });

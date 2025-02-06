@@ -6,10 +6,9 @@ import {
     type IAgentRuntime,
 } from "@elizaos/core";
 import type { FlowAccountBalanceInfo } from "@elizaos/plugin-flow";
-import { globalContainer } from "@elizaos/plugin-di";
-import { FlowWalletService } from "@fixes-ai/core";
-
 import { scripts } from "../assets/scripts.defs";
+import { globalContainer } from "@elizaos/plugin-di";
+import { FlowWalletService } from "./wallet.service";
 
 // Add SAMPLE to ServiceType enum in types.ts
 declare module "@elizaos/core" {
@@ -44,11 +43,11 @@ export class AccountsPoolService extends Service {
     async queryAccountInfo(
         userId: string = undefined,
     ): Promise<FlowAccountBalanceInfo | undefined> {
-        const walletAddress = this.walletService.address;
-        return await this.walletService.executeScript(
+        const wallet = this.walletService.wallet;
+        return await wallet.executeScript(
             scripts.getAccountStatus,
             (arg, t) => [
-                arg(walletAddress, t.Address),
+                arg(wallet.address, t.Address),
                 arg(userId ?? null, t.Optional(t.String)),
             ],
             undefined,

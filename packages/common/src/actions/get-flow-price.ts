@@ -113,6 +113,9 @@ export class GetPriceAction extends BaseFlowInjectableAction<GetPriceContent> {
 
         elizaLogger.log("Starting GET_FLOW_PRICE handler...");
 
+        // Use shared wallet instance
+        const walletIns = await this.wallet.getInstance(runtime);
+
         const resp: ScriptQueryResponse = {
             ok: false,
         };
@@ -124,12 +127,12 @@ export class GetPriceAction extends BaseFlowInjectableAction<GetPriceContent> {
         } else {
             let data: string;
             try {
-                data = await this.walletSerivce.executeScript(
+                data = await walletIns.executeScript(
                     targetToken === "flow"
                         ? scripts.getFlowPrice
                         : scripts.getStFlowPrice,
                     (_arg, _t) => [],
-                    "",
+                    ""
                 );
             } catch (err) {
                 resp.error = err.message;

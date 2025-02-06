@@ -10,7 +10,7 @@ import {
 import {
     isCadenceIdentifier,
     isEVMAddress,
-    queries as defaultQueries,
+    queries,
     transactions,
     type TransactionResponse,
 } from "@elizaos/plugin-flow";
@@ -134,7 +134,7 @@ export class TransferAction extends BaseFlowInjectableAction<TransferContent> {
     async validate(
         runtime: IAgentRuntime,
         message: Memory,
-        state?: State,
+        state?: State
     ): Promise<boolean> {
         if (await super.validate(runtime, message, state)) {
             // TODO: Add custom validation logic here to ensure the transfer does not come from unauthorized sources
@@ -152,10 +152,10 @@ export class TransferAction extends BaseFlowInjectableAction<TransferContent> {
      */
     async execute(
         content: TransferContent | null,
-        _runtime: IAgentRuntime,
+        runtime: IAgentRuntime,
         _message: Memory,
         _state?: State,
-        callback?: HandlerCallback,
+        callback?: HandlerCallback
     ): Promise<TransactionResponse | null> {
         if (!content) {
             elizaLogger.warn("No content generated");
@@ -165,9 +165,18 @@ export class TransferAction extends BaseFlowInjectableAction<TransferContent> {
         elizaLogger.log("Starting Flow Plugin's SEND_COIN handler...");
 
         // Use shared wallet instance
-        const walletAddress = this.walletSerivce.address;
+        const walletIns = await this.wallet.getInstance(runtime);
+        // FIXME: We need to use dynamic key index
+        const keyIndex = 0;
 
-        const logPrefix = `Address: ${walletAddress}\n`;
+        const resp: TransactionResponse = {
+            signer: {
+                address: walletIns.address,
+                keyIndex: keyIndex,
+            },
+            txid: "",
+        };
+        const logPrefix = `Address: ${resp.signer.address}, using keyIdex: ${resp.signer.keyIndex}\n`;
 
         // Parsed fields
         const recipient = content.to;
@@ -177,9 +186,9 @@ export class TransferAction extends BaseFlowInjectableAction<TransferContent> {
                 : Number.parseFloat(content.amount);
 
         // Check if the wallet has enough balance to transfer
-        const accountInfo = await defaultQueries.queryAccountBalanceInfo(
-            this.walletSerivce.wallet,
-            walletAddress,
+        const accountInfo = await queries.queryAccountBalanceInfo(
+            walletIns,
+            walletIns.address
         );
         const totalBalance =
             accountInfo.balance + (accountInfo.coaBalance ?? 0);
@@ -198,33 +207,32 @@ export class TransferAction extends BaseFlowInjectableAction<TransferContent> {
             throw new Error("Insufficient balance to transfer");
         }
 
-        let txId: string;
-        let keyIndex: number;
-
         try {
+            // Execute transfer
+            const authz = walletIns.buildAuthorization(keyIndex);
+
             // For different token types, we need to handle the token differently
             if (!content.token) {
                 elizaLogger.log(
-                    `${logPrefix} Sending ${amount} FLOW to ${recipient}...`,
+                    `${logPrefix} Sending ${amount} FLOW to ${recipient}...`
                 );
                 // Transfer FLOW token
-                const resp = await this.walletSerivce.sendTransaction(
+                resp.txid = await walletIns.sendTransaction(
                     transactions.mainFlowTokenDynamicTransfer,
                     (arg, t) => [
                         arg(recipient, t.String),
                         arg(amount.toFixed(1), t.UFix64),
                     ],
+                    authz
                 );
-                txId = resp.txId;
-                keyIndex = resp.index;
             } else if (isCadenceIdentifier(content.token)) {
                 // Transfer Fungible Token on Cadence side
                 const [_, tokenAddr, tokenContractName] =
                     content.token.split(".");
                 elizaLogger.log(
-                    `${logPrefix} Sending ${amount} A.${tokenAddr}.${tokenContractName} to ${recipient}...`,
+                    `${logPrefix} Sending ${amount} A.${tokenAddr}.${tokenContractName} to ${recipient}...`
                 );
-                const resp = await this.walletSerivce.sendTransaction(
+                resp.txid = await walletIns.sendTransaction(
                     transactions.mainFTGenericTransfer,
                     (arg, t) => [
                         arg(amount.toFixed(1), t.UFix64),
@@ -232,23 +240,22 @@ export class TransferAction extends BaseFlowInjectableAction<TransferContent> {
                         arg("0x" + tokenAddr, t.Address),
                         arg(tokenContractName, t.String),
                     ],
+                    authz
                 );
-                txId = resp.txId;
-                keyIndex = resp.index;
             } else if (isEVMAddress(content.token)) {
                 // Transfer ERC20 token on EVM side
                 // we need to update the amount to be in the smallest unit
-                const decimals = await defaultQueries.queryEvmERC20Decimals(
-                    this.walletSerivce.wallet,
-                    content.token,
+                const decimals = await queries.queryEvmERC20Decimals(
+                    walletIns,
+                    content.token
                 );
                 const adjustedAmount = BigInt(amount * Math.pow(10, decimals));
 
                 elizaLogger.log(
-                    `${logPrefix} Sending ${adjustedAmount} ${content.token}(EVM) to ${recipient}...`,
+                    `${logPrefix} Sending ${adjustedAmount} ${content.token}(EVM) to ${recipient}...`
                 );
 
-                const resp = await this.walletSerivce.sendTransaction(
+                resp.txid = await walletIns.sendTransaction(
                     transactions.mainEVMTransferERC20,
                     (arg, t) => [
                         arg(content.token, t.String),
@@ -256,28 +263,25 @@ export class TransferAction extends BaseFlowInjectableAction<TransferContent> {
                         // Convert the amount to string, the string should be pure number, not a scientific notation
                         arg(adjustedAmount.toString(), t.UInt256),
                     ],
+                    authz
                 );
-                txId = resp.txId;
-                keyIndex = resp.index;
             }
 
-            elizaLogger.log(
-                `${logPrefix} Sent transaction: ${txId} by KeyIndex[${keyIndex}]`,
-            );
+            elizaLogger.log(`${logPrefix} Sent transaction: ${resp.txid}`);
 
             // call the callback with the transaction response
             if (callback) {
                 const tokenName = content.token || "FLOW";
                 const baseUrl =
-                    this.walletSerivce.wallet.network === "testnet"
+                    walletIns.network === "testnet"
                         ? "https://testnet.flowscan.io"
                         : "https://flowscan.io";
-                const txURL = `${baseUrl}/tx/${txId}/events`;
+                const txURL = `${baseUrl}/tx/${resp.txid}/events`;
                 callback({
-                    text: `${logPrefix} Successfully transferred ${content.amount} ${tokenName} to ${content.to}\nTransaction: [${txId}](${txURL})`,
+                    text: `${logPrefix} Successfully transferred ${content.amount} ${tokenName} to ${content.to}\nTransaction: [${resp.txid}](${txURL})`,
                     content: {
                         success: true,
-                        txid: txId,
+                        txid: resp.txid,
                         token: content.token,
                         to: content.to,
                         amount: content.amount,
@@ -298,6 +302,8 @@ export class TransferAction extends BaseFlowInjectableAction<TransferContent> {
         }
 
         elizaLogger.log("Completed Flow Plugin's SEND_COIN handler.");
+
+        return resp;
     }
 }
 
