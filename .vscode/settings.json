@@ -3,30 +3,32 @@
         "source.fixAll.eslint": "explicit"
     },
     "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.insertSpaces": true,
     "editor.detectIndentation": false,
     "editor.tabSize": 4,
-    "biome.enabled": true,
-    "eslint.format.enable": false,
-    "prettier.enable": false,
+    "eslint.format.enable": true,
     "javascript.format.enable": false,
     "typescript.format.enable": false,
     "files.trimTrailingWhitespace": true,
     "editor.trimAutoWhitespace": true,
     "[typescript]": {
-        "editor.defaultFormatter": "biomejs.biome"
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "[typescriptreact]": {
-        "editor.defaultFormatter": "biomejs.biome"
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
     "[javascriptreact]": {
-        "editor.defaultFormatter": "biomejs.biome"
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
     "[jsonc]": {
         "editor.defaultFormatter": "vscode.json-language-features"
     },
     "[javascript]": {
-        "editor.defaultFormatter": "biomejs.biome"
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+    "[scss]": {
+        "editor.defaultFormatter": "vscode.css-language-features"
     },
     "files.associations": {
         "*.css": "tailwindcss"
