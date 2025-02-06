@@ -15,7 +15,7 @@ access(all) fun main(
             flowBalance = flowVaultRef.balance
         }
 
-        let childrenAmount = pool.getChildrenAmount(type: "eliza")
+        let childrenAmount = pool.getChildrenAmount(type: "Eliza")
         return AccountStatus(
             mainAddr,
             flowBalance,

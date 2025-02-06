@@ -115,7 +115,7 @@ export class GetUserAccountInfoAction implements Action {
         if (!acctInfo) {
             resp.error =
                 resp.error ??
-                `Failed to query account info for ${userId} from ${mainAddr}, please ensure the account exists.`;
+                `Failed to query account info for ${userId} from ${mainAddr}`;
             callback?.({
                 text: resp.error,
                 content: {
