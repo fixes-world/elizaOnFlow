@@ -12,7 +12,7 @@ import { FlowAccountBalanceInfo } from "@elizaos/plugin-flow";
 import { globalContainer } from "@elizaos/plugin-di";
 import { FlowWalletService, TransactionSentResponse } from "@fixes-ai/core";
 
-import { formatWalletCreated, formatWalletInfo } from "../formater";
+import { formatWalletInfo } from "../formater";
 import { AccountsPoolService } from "../services/acctPool.service";
 
 /**
@@ -142,62 +142,30 @@ export class EnsureUserAccountExistsAction implements Action {
         }
 
         // create a new account by sendinng transaction
-        type TransactionResponse = {
-            txId: string;
-            keyIndex: number;
-            address: string;
-        };
-
-        const resp = await new Promise<TransactionResponse>(
-            (resolve, reject) => {
-                let txResp: TransactionSentResponse;
-                this.acctPoolSerivce
-                    .createNewAccount(userId, {
-                        onFinalized: async (txId, status, errorMsg) => {
-                            if (errorMsg) {
-                                reject(
-                                    new Error(
-                                        "Error in the creation transaction: " +
-                                            errorMsg,
-                                    ),
-                                );
-                                return;
-                            }
-                            const addressCreateEvt = status.events.find(
-                                (e) => e.type === "flow.AccountCreated",
+        await new Promise((resolve, reject) => {
+            let txResp: TransactionSentResponse;
+            this.acctPoolSerivce
+                .createNewAccount(userId, {
+                    onFinalized: async (txId, status, errorMsg) => {
+                        if (errorMsg) {
+                            reject(
+                                new Error(
+                                    "Error creating account: " + errorMsg,
+                                ),
                             );
-                            if (addressCreateEvt) {
-                                const address = addressCreateEvt.data.address;
-                                elizaLogger.log(
-                                    `Account created for ${userId} at ${address}`,
-                                );
-                                resolve({
-                                    txId: txResp?.txId ?? txId,
-                                    keyIndex: txResp?.index,
-                                    address: address,
-                                });
-                            } else {
-                                reject(
-                                    new Error(
-                                        "No account created event found.",
-                                    ),
-                                );
-                            }
-                        },
-                    })
-                    .then((tx) => (txResp = tx))
-                    .catch((e) => reject(e));
-            },
-        );
-
-        callback?.({
-            text: formatWalletCreated(
-                message.userId,
-                accountName,
-                resp.address,
-            ),
-            content: resp,
-            source: "FlowBlockchain",
+                            return;
+                        }
+                        // TODO parse the events
+                        // status.events and callback to Eliza
+                        resolve({
+                            txId,
+                            keyIndex: txResp?.index,
+                            ...status,
+                        });
+                    },
+                })
+                .then((tx) => (txResp = tx))
+                .catch((e) => reject(e));
         });
 
         elizaLogger.log("Completed ENSURE_USER_ACCOUNT_EXISTS handler.");

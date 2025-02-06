@@ -424,11 +424,6 @@
             "emulator-account": [
                 "AccountsPool"
             ]
-        },
-        "testnet": {
-            "pool-testnet-deploy": [
-                "AccountsPool"
-            ]
         }
     }
 }
