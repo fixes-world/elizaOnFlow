@@ -1,8 +1,12 @@
-<!-- Use this template by filling in information and copy and pasting relevant items out of the html comments. -->
+<!-- Use this template by filling in information for Hackathon Submissions and copy and pasting relevant items out of the html comments. -->
+
+# For which Hackathon
+
+<!-- Link to the Hackathon event page -->
 
 # Relates to
 
-<!-- LINK TO ISSUE OR TICKET -->
+<!-- LINK TO ISSUE OR TICKET, if none, remove this section -->
 
 <!-- This risks section is to be filled out before final review and merge. -->
 
@@ -28,14 +32,6 @@ Updates (new versions of included code)
 <!-- This "Why" section is most relevant if there is no linked issue explaining why. If there is a related issue it might make sense to skip this why section. -->
 <!--
 ## Why are we doing this? Any context or related work?
--->
-
-# Documentation changes needed?
-
-<!--
-My changes do not require a change to the project documentation.
-My changes require a change to the project documentation.
-If a docs change is needed: I have updated the documentation accordingly.
 -->
 
 <!-- Please show how you tested the PR. This will really help if the PR needs to be retested, and probably help the PR get merged quicker. -->
