@@ -2582,6 +2582,9 @@ importers:
         specifier: ^0.4.0
         version: 0.4.0
     devDependencies:
+      '@biomejs/biome':
+        specifier: 1.9.4
+        version: 1.9.4
       '@types/node':
         specifier: ^20.0.0
         version: 20.17.9
@@ -2612,6 +2615,10 @@ importers:
       whatwg-url:
         specifier: 7.1.0
         version: 7.1.0
+    devDependencies:
+      '@biomejs/biome':
+        specifier: 1.9.4
+        version: 1.9.4
 
   deps/eliza/packages/plugin-flow:
     dependencies:
@@ -2652,6 +2659,9 @@ importers:
         specifier: 3.23.8
         version: 3.23.8
     devDependencies:
+      '@biomejs/biome':
+        specifier: 1.9.4
+        version: 1.9.4
       '@types/elliptic':
         specifier: 6.4.18
         version: 6.4.18
@@ -2676,6 +2686,10 @@ importers:
       whatwg-url:
         specifier: 7.1.0
         version: 7.1.0
+    devDependencies:
+      '@biomejs/biome':
+        specifier: 1.9.4
+        version: 1.9.4
 
   deps/eliza/packages/plugin-form:
     dependencies:
@@ -2689,6 +2703,9 @@ importers:
         specifier: 7.1.0
         version: 7.1.0
     devDependencies:
+      '@biomejs/biome':
+        specifier: 1.9.4
+        version: 1.9.4
       tsup:
         specifier: 8.3.5
         version: 8.3.5(@swc/core@1.10.4(@swc/helpers@0.5.15))(jiti@2.4.2)(postcss@8.4.49)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
@@ -2713,6 +2730,10 @@ importers:
       whatwg-url:
         specifier: 7.1.0
         version: 7.1.0
+    devDependencies:
+      '@biomejs/biome':
+        specifier: 1.9.4
+        version: 1.9.4
 
   deps/eliza/packages/plugin-gelato:
     dependencies:
@@ -2734,6 +2755,10 @@ importers:
       whatwg-url:
         specifier: 7.1.0
         version: 7.1.0
+    devDependencies:
+      '@biomejs/biome':
+        specifier: 1.9.4
+        version: 1.9.4
 
   deps/eliza/packages/plugin-genlayer:
     dependencies:
@@ -2746,6 +2771,10 @@ importers:
       tsup:
         specifier: 8.3.5
         version: 8.3.5(@swc/core@1.10.4(@swc/helpers@0.5.15))(jiti@2.4.2)(postcss@8.4.49)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
+    devDependencies:
+      '@biomejs/biome':
+        specifier: 1.9.4
+        version: 1.9.4
 
   deps/eliza/packages/plugin-giphy:
     dependencies:
@@ -2761,6 +2790,10 @@ importers:
       zod:
         specifier: ^3.22.4
         version: 3.23.8
+    devDependencies:
+      '@biomejs/biome':
+        specifier: 1.9.4
+        version: 1.9.4
 
   deps/eliza/packages/plugin-gitbook:
     dependencies:
@@ -2770,6 +2803,10 @@ importers:
       tsup:
         specifier: 8.3.5
         version: 8.3.5(@swc/core@1.10.4(@swc/helpers@0.5.15))(jiti@2.4.2)(postcss@8.4.49)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
+    devDependencies:
+      '@biomejs/biome':
+        specifier: 1.9.4
+        version: 1.9.4
 
   deps/eliza/packages/plugin-gitcoin-passport:
     dependencies:
@@ -2782,6 +2819,10 @@ importers:
       whatwg-url:
         specifier: 7.1.0
         version: 7.1.0
+    devDependencies:
+      '@biomejs/biome':
+        specifier: 1.9.4
+        version: 1.9.4
 
   deps/eliza/packages/plugin-goat:
     dependencies:
@@ -2812,6 +2853,10 @@ importers:
       whatwg-url:
         specifier: 7.1.0
         version: 7.1.0
+    devDependencies:
+      '@biomejs/biome':
+        specifier: 1.9.4
+        version: 1.9.4
 
   deps/eliza/packages/plugin-goplus:
     dependencies:
