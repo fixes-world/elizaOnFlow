@@ -48,7 +48,7 @@ export class GetUserAccountInfoAction implements Action {
                 },
             ],
         ];
-        this.suppressInitialMessage = true;
+        this.suppressInitialMessage = false;
     }
 
     /**
@@ -59,19 +59,10 @@ export class GetUserAccountInfoAction implements Action {
         message: Memory,
         _state?: State,
     ): Promise<boolean> {
-        if (!this.walletSerivce.isInitialized) {
-            return false;
-        }
-
-        const content =
-            typeof message.content === "string"
-                ? message.content
-                : message.content?.text;
-
         const keywords: string[] = ["account", "info", "账户", "账号"];
         // Check if the message contains the keywords
         return keywords.some((keyword) =>
-            content.toLowerCase().includes(keyword.toLowerCase()),
+            message.content.text.toLowerCase().includes(keyword.toLowerCase()),
         );
     }
 

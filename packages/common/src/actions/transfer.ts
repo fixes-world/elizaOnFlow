@@ -111,7 +111,6 @@ const transferOption: ActionOptions<TransferContent> = {
         ],
     ],
     contentClass: TransferContent,
-    suppressInitialMessage: true,
 };
 
 /**
