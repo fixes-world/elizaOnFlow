@@ -226,7 +226,6 @@ export class GetTokenInfoAction extends BaseFlowInjectableAction<GetTokenInfoCon
                             ],
                             undefined,
                         );
-                        elizaLogger.debug("Loaded token info:", info);
                         if (
                             info &&
                             info.address === tokenDetails.flowAddress &&
@@ -239,8 +238,6 @@ export class GetTokenInfoAction extends BaseFlowInjectableAction<GetTokenInfoCon
 
                             resp.ok = true;
                             resp.data = tokenInfo;
-                        } else {
-                            resp.error = `Failed to get token info for $${content.symbol}`;
                         }
                     } catch (err) {
                         resp.error = `Failed to get token info for $${content.symbol}: ${err.message}`;
