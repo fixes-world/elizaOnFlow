@@ -893,9 +893,7 @@ export async function createAgent(
                 ? teeLogPlugin
                 : null,
             getSecret(character, "TEE_MARLIN") ? teeMarlinPlugin : null,
-        ]
-            .flat()
-            .filter(Boolean),
+        ].filter(Boolean),
         providers: [],
         managers: [],
         cacheManager: cache,
