@@ -30,7 +30,7 @@ declare module "@elizaos/core" {
 export class AccountsPoolService extends Service {
     constructor(
         @inject(FlowWalletService)
-        private readonly walletService: FlowWalletService
+        private readonly walletService: FlowWalletService,
     ) {
         super();
     }
@@ -89,7 +89,7 @@ export class AccountsPoolService extends Service {
             const obj = await this.walletService.executeScript(
                 scripts.getAccountStatus,
                 (arg, t) => [arg(walletAddress, t.Address)],
-                undefined
+                undefined,
             );
             if (obj) {
                 return {
@@ -101,35 +101,11 @@ export class AccountsPoolService extends Service {
         } catch (error) {
             elizaLogger.error(
                 `Failed to query account status from ${walletAddress}`,
-                error
+                error,
             );
             throw error;
         }
         return undefined;
-    }
-
-    /**
-     * Check if the address is a child of the agent
-     * @param address
-     */
-    async checkAddressIsChildOfAgent(address: string): Promise<boolean> {
-        const walletAddress = this.walletService.address;
-        try {
-            return await this.walletService.executeScript(
-                scripts.isAddressChildOf,
-                (arg, t) => [
-                    arg(walletAddress, t.Address),
-                    arg(address, t.Address),
-                ],
-                false
-            );
-        } catch (error) {
-            elizaLogger.error(
-                `Failed to check if address ${address} is child of agent`,
-                error
-            );
-        }
-        return false;
     }
 
     /**
@@ -138,7 +114,7 @@ export class AccountsPoolService extends Service {
      * @returns
      */
     async queryAccountInfo(
-        userId: string = undefined
+        userId: string = undefined,
     ): Promise<FlowAccountBalanceInfo | undefined> {
         const walletAddress = this.walletService.address;
         try {
@@ -148,7 +124,7 @@ export class AccountsPoolService extends Service {
                     arg(walletAddress, t.Address),
                     arg(userId ?? null, t.Optional(t.String)),
                 ],
-                undefined
+                undefined,
             );
             if (obj) {
                 return {
@@ -160,10 +136,8 @@ export class AccountsPoolService extends Service {
             }
         } catch (error) {
             elizaLogger.error(
-                `Failed to query account info for ${
-                    userId ?? "root"
-                } from ${walletAddress}`,
-                error
+                `Failed to query account info for ${userId ?? "root"} from ${walletAddress}`,
+                error,
             );
             throw error;
         }
@@ -178,7 +152,7 @@ export class AccountsPoolService extends Service {
     async createNewAccount(
         userId: string,
         callbacks?: TransactionCallbacks,
-        initalFunding?: number
+        initalFunding?: number,
     ): Promise<TransactionSentResponse> {
         return await this.walletService.sendTransaction(
             transactions.acctPoolCreateChildAccount,
@@ -186,10 +160,10 @@ export class AccountsPoolService extends Service {
                 arg(userId, t.String),
                 arg(
                     initalFunding ? initalFunding.toFixed(8) : null,
-                    t.Optional(t.UFix64)
+                    t.Optional(t.UFix64),
                 ),
             ],
-            callbacks
+            callbacks,
         );
     }
 }
