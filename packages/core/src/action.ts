@@ -71,7 +71,7 @@ export abstract class BaseFlowInjectableAction<
 
         // You need to ensure that the wallet is valid
         try {
-            await this.walletSerivce.wallet.getWalletBalance();
+            await this.walletSerivce.wallet.syncAccountInfo();
         } catch {
             elizaLogger.error("Failed to sync account info");
             return false;
