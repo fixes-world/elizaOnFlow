@@ -2,7 +2,7 @@ import { injectable, inject } from "inversify";
 import {
     elizaLogger,
     Service,
-    type ServiceType,
+    ServiceType,
     type IAgentRuntime,
 } from "@elizaos/core";
 import type { FlowAccountBalanceInfo } from "@elizaos/plugin-flow";
@@ -94,8 +94,8 @@ export class AccountsPoolService extends Service {
             if (obj) {
                 return {
                     address: obj.address,
-                    balance: Number.parseFloat(obj.balance),
-                    childrenAmount: Number.parseInt(obj.childrenAmount),
+                    balance: parseFloat(obj.balance),
+                    childrenAmount: parseInt(obj.childrenAmount),
                 };
             }
         } catch (error) {
@@ -153,11 +153,9 @@ export class AccountsPoolService extends Service {
             if (obj) {
                 return {
                     address: obj.address,
-                    balance: Number.parseFloat(obj.balance),
+                    balance: parseFloat(obj.balance),
                     coaAddress: obj.coaAddress,
-                    coaBalance: obj.coaBalance
-                        ? Number.parseFloat(obj.coaBalance)
-                        : 0,
+                    coaBalance: obj.coaBalance ? parseFloat(obj.coaBalance) : 0,
                 };
             }
         } catch (error) {
