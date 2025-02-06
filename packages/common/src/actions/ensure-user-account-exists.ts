@@ -137,7 +137,7 @@ export class EnsureUserAccountExistsAction implements Action {
 
         if (acctInfo) {
             callback?.({
-                text: formatWalletInfo(message.userId, accountName, acctInfo),
+                text: formatWalletInfo(accountName, acctInfo),
                 content: { exists: true },
                 source: "FlowBlockchain",
             });

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { inject, injectable } from "inversify";
+import { injectable } from "inversify";
 import {
     elizaLogger,
     type HandlerCallback,
@@ -20,7 +20,6 @@ import {
 } from "@elizaos/plugin-di";
 import { BaseFlowInjectableAction } from "@fixes-ai/core";
 import { formatTransationSent } from "../formater";
-import { AccountsPoolService } from "../services/acctPool.service";
 
 /**
  * The generated content for the transfer action
@@ -50,7 +49,7 @@ export class TransferContent {
         examples: [
             "For Cadence address: '0x1654653399040a61'",
             "For EVM address: '0x742d35Cc6634C0532925a3b844Bc454e4438f44e'",
-            "For userId: 'e1b3b9c2-7e3f-4b1b-9f7d-2a0c7e2d6e9c', If the recipient mentioned in message is 'me' or 'myself', it should be the current user's id",
+            "For userId: 'e1b3b9c2-7e3f-4b1b-9f7d-2a0c7e2d6e9c', If the recipient mentioned in message is 'me' or 'myself', it should be the current userId variable",
         ],
         schema: z.string(),
     })
@@ -123,10 +122,7 @@ const transferOption: ActionOptions<TransferContent> = {
  */
 @injectable()
 export class TransferAction extends BaseFlowInjectableAction<TransferContent> {
-    constructor(
-        @inject(AccountsPoolService)
-        private readonly acctPoolService: AccountsPoolService,
-    ) {
+    constructor() {
         super(transferOption);
     }
 
@@ -158,7 +154,7 @@ export class TransferAction extends BaseFlowInjectableAction<TransferContent> {
     async execute(
         content: TransferContent | null,
         _runtime: IAgentRuntime,
-        message: Memory,
+        _message: Memory,
         _state?: State,
         callback?: HandlerCallback,
     ) {

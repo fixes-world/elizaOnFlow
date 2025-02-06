@@ -8,11 +8,12 @@ import {
     type Memory,
     type State,
 } from "@elizaos/core";
+import { FlowAccountBalanceInfo } from "@elizaos/plugin-flow";
 import { globalContainer } from "@elizaos/plugin-di";
 import { FlowWalletService, type ScriptQueryResponse } from "@fixes-ai/core";
 
+import { scripts } from "../assets/scripts.defs";
 import { formatWalletInfo } from "../formater";
-import { AccountsPoolService } from "../services/acctPool.service";
 
 /**
  * Get User Account Info Action
@@ -31,8 +32,6 @@ export class GetUserAccountInfoAction implements Action {
     constructor(
         @inject(FlowWalletService)
         private readonly walletSerivce: FlowWalletService,
-        @inject(AccountsPoolService)
-        private readonly acctPoolService: AccountsPoolService,
     ) {
         this.name = "GET_USER_ACCOUNT_INFO";
         this.similes = [];
@@ -102,26 +101,48 @@ export class GetUserAccountInfoAction implements Action {
 
         const accountName = `Account[${mainAddr}/${isSelf ? "root" : userId}]`;
 
-        const acctInfo = await this.acctPoolService.queryAccountInfo(
-            isSelf ? undefined : userId,
-        );
+        let acctInfo: FlowAccountBalanceInfo;
+        try {
+            const obj = await this.walletSerivce.executeScript(
+                scripts.getAccountInfoFrom,
+                (arg, t) => [
+                    arg(mainAddr, t.Address),
+                    arg(isSelf ? null : userId, t.Optional(t.String)),
+                ],
+                undefined,
+            );
+            if (obj) {
+                acctInfo = {
+                    address: obj.address,
+                    balance: parseFloat(obj.balance),
+                    coaAddress: obj.coaAddress,
+                    coaBalance: obj.coaBalance ? parseFloat(obj.coaBalance) : 0,
+                };
+            } else {
+                resp.error = `${accountName} is not found.`;
+            }
+        } catch (err) {
+            resp.error = err.message;
+        }
 
-        if (!acctInfo) {
-            resp.error = `Failed to query account info for ${userId} from ${mainAddr}`;
+        if (acctInfo) {
+            resp.ok = true;
+            resp.data = acctInfo;
+        }
+
+        if (resp.ok) {
             callback?.({
-                text: resp.error,
-                content: {
-                    error: resp.error,
-                },
+                text: formatWalletInfo(accountName, acctInfo),
+                content: { success: true, info: acctInfo },
                 source: "FlowBlockchain",
             });
         } else {
-            resp.ok = true;
-            resp.data = acctInfo;
-
+            elizaLogger.error("Error:", resp.error);
             callback?.({
-                text: formatWalletInfo(userId, accountName, acctInfo),
-                content: { success: true, info: acctInfo },
+                text: `Unable to get information for ${accountName}.`,
+                content: {
+                    error: resp.error ?? "Unknown error",
+                },
                 source: "FlowBlockchain",
             });
         }
