@@ -7,10 +7,8 @@ import { defaultCharacter } from "./character";
 import {
     handlePluginImporting,
     hasValidRemoteUrls,
-    jsonToCharacter,
     loadCharacterFromOnchain,
     loadCharacters,
-    loadCharacterTryPath,
     parseArguments,
     startAgent,
 } from "./index.utils";
@@ -36,17 +34,17 @@ const checkPortAvailable = (port: number): Promise<boolean> => {
 
 const startAgents = async () => {
     const directClient = new DirectClient();
-    let serverPort = Number.parseInt(settings.SERVER_PORT || "3000");
+    let serverPort = parseInt(settings.SERVER_PORT || "3000");
     const args = parseArguments();
-    const charactersArg = args.characters || args.character;
+    let charactersArg = args.characters || args.character;
     let characters = [defaultCharacter];
 
-    const useOnchain = process.env.IQ_WALLET_ADDRESS && process.env.IQSOlRPC;
-    if (useOnchain) {
+    if (process.env.IQ_WALLET_ADDRESS && process.env.IQSOlRPC) {
+        await import("@elizaos/plugin-iq6900");
         characters = await loadCharacterFromOnchain();
     }
 
-    if ((!useOnchain && charactersArg) || hasValidRemoteUrls()) {
+    if (charactersArg || hasValidRemoteUrls()) {
         characters = await loadCharacters(charactersArg);
     }
 
@@ -64,7 +62,7 @@ const startAgents = async () => {
     // Find available port
     while (!(await checkPortAvailable(serverPort))) {
         elizaLogger.warn(
-            `Port ${serverPort} is in use, trying ${serverPort + 1}`,
+            `Port ${serverPort} is in use, trying ${serverPort + 1}`
         );
         serverPort++;
     }
@@ -75,20 +73,17 @@ const startAgents = async () => {
         character.plugins = await handlePluginImporting(character.plugins);
 
         // wrap it so we don't have to inject directClient later
-        return startAgent(await normalizeCharacter(character), directClient);
+        return startAgent(character, directClient);
     };
-
-    directClient.loadCharacterTryPath = loadCharacterTryPath;
-    directClient.jsonToCharacter = jsonToCharacter;
 
     directClient.start(serverPort);
 
-    if (serverPort !== Number.parseInt(settings.SERVER_PORT || "3000")) {
+    if (serverPort !== parseInt(settings.SERVER_PORT || "3000")) {
         elizaLogger.log(`Server started on alternate port ${serverPort}`);
     }
 
     elizaLogger.log(
-        "Run `pnpm start:client` to start the client and visit the outputted URL (http://localhost:5173) to chat with your agents. When running multiple agents, use client with different port `SERVER_PORT=3001 pnpm start:client`",
+        "Run `pnpm start:client` to start the client and visit the outputted URL (http://localhost:5173) to chat with your agents. When running multiple agents, use client with different port `SERVER_PORT=3001 pnpm start:client`"
     );
 };
 
@@ -103,12 +98,12 @@ if (
     parseBooleanFromText(process.env.PREVENT_UNHANDLED_EXIT)
 ) {
     // Handle uncaught exceptions to prevent the process from crashing
-    process.on("uncaughtException", (err) => {
+    process.on("uncaughtException", function (err) {
         console.error("uncaughtException", err);
     });
 
     // Handle unhandled rejections to prevent the process from crashing
-    process.on("unhandledRejection", (err) => {
+    process.on("unhandledRejection", function (err) {
         console.error("unhandledRejection", err);
     });
 }
