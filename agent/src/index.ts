@@ -14,6 +14,7 @@ import {
     parseArguments,
     startAgent,
 } from "./index.utils";
+import { mainCharacter } from "./warpads.character";
 
 const checkPortAvailable = (port: number): Promise<boolean> => {
     return new Promise((resolve) => {
@@ -39,7 +40,7 @@ const startAgents = async () => {
     let serverPort = Number.parseInt(settings.SERVER_PORT || "3000");
     const args = parseArguments();
     const charactersArg = args.characters || args.character;
-    let characters = [defaultCharacter];
+    let characters = [mainCharacter];
 
     const useOnchain = process.env.IQ_WALLET_ADDRESS && process.env.IQSOlRPC;
     if (useOnchain) {

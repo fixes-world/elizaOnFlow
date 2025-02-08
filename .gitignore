@@ -189,3 +189,5 @@ lit-config.json
 extra
 
 *.pkey
+
+warpads.pkey

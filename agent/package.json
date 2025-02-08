@@ -142,6 +142,7 @@
         "@elizaos/plugin-multiversx": "workspace:*",
         "@elizaos/plugin-near": "workspace:*",
         "@elizaos/plugin-stargaze": "workspace:*",
+        "@elizaos/plugin-ads": "workspace:*",
         "@elizaos/plugin-zksync-era": "workspace:*",
         "@fixes-ai/core": "workspace:*",
         "@fixes-ai/common": "workspace:*",
