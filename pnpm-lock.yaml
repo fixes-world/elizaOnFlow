@@ -114,9 +114,6 @@ importers:
       '@elizaos/adapter-sqlite':
         specifier: workspace:*
         version: link:../deps/eliza/packages/adapter-sqlite
-      '@elizaos/adapter-supabase':
-        specifier: workspace:*
-        version: link:../deps/eliza/packages/adapter-supabase
       '@elizaos/client-alexa':
         specifier: workspace:*
         version: link:../deps/eliza/packages/client-alexa
@@ -2271,37 +2268,6 @@ importers:
       vitest:
         specifier: ^3.0.5
         version: 3.0.5(@types/debug@4.1.12)(@types/node@22.12.0)(jsdom@25.0.1(bufferutil@4.0.9)(canvas@2.11.2(encoding@0.1.13))(utf-8-validate@6.0.5))(terser@5.37.0)
-
-  deps/eliza/packages/plugin-coinbase:
-    dependencies:
-      '@elizaos/core':
-        specifier: workspace:*
-        version: link:../core
-      '@types/jsonwebtoken':
-        specifier: ^9.0.7
-        version: 9.0.7
-      coinbase-advanced-sdk:
-        specifier: file:../../packages/plugin-coinbase/advanced-sdk-ts
-        version: '@coinbase-samples/advanced-sdk-ts@file:deps/eliza/packages/plugin-coinbase/advanced-sdk-ts(encoding@0.1.13)'
-      coinbase-api:
-        specifier: 1.0.5
-        version: 1.0.5(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      jsonwebtoken:
-        specifier: ^9.0.2
-        version: 9.0.2
-      node-fetch:
-        specifier: ^2.6.1
-        version: 2.7.0(encoding@0.1.13)
-    devDependencies:
-      '@types/node':
-        specifier: ^20.0.0
-        version: 20.17.9
-      tsup:
-        specifier: 8.3.5
-        version: 8.3.5(@swc/core@1.10.4(@swc/helpers@0.5.15))(jiti@2.4.2)(postcss@8.4.49)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
-      vitest:
-        specifier: ^3.0.0
-        version: 3.0.5(@types/debug@4.1.12)(@types/node@20.17.9)(jsdom@25.0.1(bufferutil@4.0.9)(canvas@2.11.2(encoding@0.1.13))(utf-8-validate@5.0.10))(terser@5.37.0)
 
   deps/eliza/packages/plugin-coingecko:
     dependencies:
@@ -6615,9 +6581,6 @@ packages:
   '@cliqz/adblocker@1.34.0':
     resolution: {integrity: sha512-d7TeUl5t+TOMJe7/CRYtf+x6hbd8N25DtH7guQTIjjr3AFVortxiAIgNejGvVqy0by4eNByw+oVil15oqxz2Eg==}
     deprecated: This project has been renamed to @ghostery/adblocker. Install using @ghostery/adblocker instead
-
-  '@coinbase-samples/advanced-sdk-ts@file:deps/eliza/packages/plugin-coinbase/advanced-sdk-ts':
-    resolution: {directory: deps/eliza/packages/plugin-coinbase/advanced-sdk-ts, type: directory}
 
   '@coinbase/cdp-agentkit-core@0.0.10':
     resolution: {integrity: sha512-EFTaCkCd1445B4jq3LxVJaqw+r4BrwyjTAOoEabKrv9BycCPgS7fPRLuuugmnJRbSEtlG90NbsRZ7B6YkQRJ/g==}
@@ -28189,12 +28152,7 @@ snapshots:
       '@types/firefox-webext-browser': 120.0.4
       tldts-experimental: 6.1.70
 
-  '@coinbase-samples/advanced-sdk-ts@file:deps/eliza/packages/plugin-coinbase/advanced-sdk-ts(encoding@0.1.13)':
-    dependencies:
-      jsonwebtoken: 9.0.2
-      node-fetch: 2.7.0(encoding@0.1.13)
-    transitivePeerDependencies:
-      - encoding
+
 
   '@coinbase/cdp-agentkit-core@0.0.10(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@6.0.5)':
     dependencies:

@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  tee:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    stdin_open: true
+    tty: true
+    volumes:
+      - /var/run/tappd.sock:/var/run/tappd.sock
+      - tee:/app/packages/client-twitter/src/tweetcache
+      - tee:/app/db.sqlite
+      - .env:/app/.env
+    environment:
+      - NODE_ENV=production
+      - TWITTER_DRY_RUN=false
+      - TWITTER_USERNAME=${TWITTER_USERNAME}
+      - TWITTER_PASSWORD=${TWITTER_PASSWORD}
+      - TWITTER_EMAIL=${TWITTER_EMAIL}
+    ports:
+      - "3000:3000"
+    restart: always
+
+volumes:
+  tee:
